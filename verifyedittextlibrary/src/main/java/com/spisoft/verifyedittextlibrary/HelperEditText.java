@@ -1,4 +1,4 @@
-package com.github.cirno_poi.verifyedittextlibrary;
+package com.spisoft.verifyedittextlibrary;
 
 import android.content.Context;
 import android.util.AttributeSet;

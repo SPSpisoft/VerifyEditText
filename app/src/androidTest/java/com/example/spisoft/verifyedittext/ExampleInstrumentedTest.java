@@ -1,4 +1,4 @@
-package com.github.cirno_poi.verificationedittextlibrary;
+package com.example.spisoft.verifyedittext;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.github.cirno_poi.verificationedittextlibrary.test", appContext.getPackageName());
+        assertEquals("com.example.spisoft.verifyedittext", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package com.github.cirno_poi.verifyedittextlibrary;
+package com.spisoft.verifyedittextlibrary;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.cirno_poi.verificationedittextlibrary.R;
+import com.spisoft.verificationedittextlibrary.R;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * 验证码输入框，可自定义输入框数量，间距，颜色等
  *
- * @author cirno_poi
+ * @author spisoft
  */
 public class VerifyEditText extends LinearLayout {
 
@@ -194,7 +194,8 @@ public class VerifyEditText extends LinearLayout {
 
         OnKeyListener keyListener = (v, keyCode, event) -> {
             //监听键盘删除键
-            if (keyCode == KeyEvent.KEYCODE_DEL) {
+            if (keyCode == KeyEvent.KEYCODE_DEL)
+            {
                 //只对ACTION_DOWN进行处理
                 if (event.getAction() != KeyEvent.ACTION_DOWN) {
                     return true;
@@ -214,6 +215,17 @@ public class VerifyEditText extends LinearLayout {
                 editTextList.get(currentPosition).requestFocus();
                 editTextList.get(currentPosition).getText().clear();
                 return true;
+            }else {
+                if (!editTextList.get(currentPosition).getText().toString().isEmpty()
+                        && event.getAction() == KeyEvent.ACTION_DOWN
+                        && event.getKeyCode() >= KeyEvent.KEYCODE_0 && event.getKeyCode() <= KeyEvent.KEYCODE_9) {
+                    editTextList.get(currentPosition).setText("");
+                    char bb = (char) event.getUnicodeChar();
+                    StringBuilder builder = new StringBuilder();
+                    builder.append(bb);
+                    editTextList.get(currentPosition).setText(builder.toString());
+                    return true;
+                }
             }
             return false;
         };
@@ -241,6 +253,15 @@ public class VerifyEditText extends LinearLayout {
             builder.append(et.getText().toString());
         }
         return builder.toString();
+    }
+
+    public void resetContent() {
+        StringBuilder builder = new StringBuilder();
+        for (HelperEditText et : editTextList) {
+            et.setText("");
+//            builder.append(et.getText().toString());
+        }
+//        return builder.toString();
     }
 
     /**

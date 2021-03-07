@@ -7,9 +7,16 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.github.cirno_poi.verifyedittextlibrary.VerifyEditText
+    <com.spisoft.verifyedittextlibrary.VerifyEditText
+        android:id="@+id/verifyEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/reset"
+        android:text="Reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

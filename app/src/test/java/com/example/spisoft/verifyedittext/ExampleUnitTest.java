@@ -1,4 +1,4 @@
-package com.example.cirno_poi.verifyedittext;
+package com.example.spisoft.verifyedittext;
 
 import org.junit.Test;
 
