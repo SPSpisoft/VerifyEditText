@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 验证码输入框，可自定义输入框数量，间距，颜色等
+ *
  *
  * @author spisoft
  */
@@ -39,6 +39,7 @@ public class VerifyEditText extends LinearLayout {
     private final int DEFAULT_LINE_SPACE = 8;
     private final int DEFAULT_TEXT_SIZE = 20;
 
+    private boolean EnableEdit = true;
     private Context context;
     private List<HelperEditText> editTextList;
     private List<View> underlineList;
@@ -84,6 +85,19 @@ public class VerifyEditText extends LinearLayout {
 
     public VerifyEditText(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
+    }
+
+    public void SetEnableEditText(boolean enableEdit){
+        this.EnableEdit = enableEdit;
+        for (HelperEditText et : editTextList) {
+            if(et != null) {
+                et.setEnabled(this.EnableEdit);
+            }
+        }
+    }
+
+    public boolean GetEnableEditText(){
+        return this.EnableEdit;
     }
 
     public VerifyEditText(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -132,7 +146,6 @@ public class VerifyEditText extends LinearLayout {
             editText.setFilters(filters);
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
             editText.setGravity(Gravity.CENTER);
-            //修改光标的颜色（反射）
             try {
                 Field f = TextView.class.getDeclaredField("mCursorDrawableRes");
                 f.setAccessible(true);
@@ -193,10 +206,8 @@ public class VerifyEditText extends LinearLayout {
         };
 
         OnKeyListener keyListener = (v, keyCode, event) -> {
-            //监听键盘删除键
             if (keyCode == KeyEvent.KEYCODE_DEL)
             {
-                //只对ACTION_DOWN进行处理
                 if (event.getAction() != KeyEvent.ACTION_DOWN) {
                     return true;
                 }
@@ -204,7 +215,6 @@ public class VerifyEditText extends LinearLayout {
                     if (currentPosition <= 0) {
                         return true;
                     }
-                    //跳到前一个不为空的EditText
                     for (int position = currentPosition; position >= 0; position--) {
                         currentPosition = position;
                         if (!editTextList.get(position).getText().toString().isEmpty()) {
@@ -218,11 +228,10 @@ public class VerifyEditText extends LinearLayout {
             }else {
                 if (!editTextList.get(currentPosition).getText().toString().isEmpty()
                         && event.getAction() == KeyEvent.ACTION_DOWN
-                        && event.getKeyCode() >= KeyEvent.KEYCODE_0 && event.getKeyCode() <= KeyEvent.KEYCODE_9) {
-                    editTextList.get(currentPosition).setText("");
-                    char bb = (char) event.getUnicodeChar();
+                        && (event.getKeyCode() >= KeyEvent.KEYCODE_0 && event.getKeyCode() <= KeyEvent.KEYCODE_9)) {
+//                    editTextList.get(currentPosition).setText("");
                     StringBuilder builder = new StringBuilder();
-                    builder.append(bb);
+                    builder.append((char) event.getUnicodeChar());
                     editTextList.get(currentPosition).setText(builder.toString());
                     return true;
                 }

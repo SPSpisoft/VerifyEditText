@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                verifyEditText.resetContent();
-                verifyEditText.resetContent();
+                verifyEditText.SetEnableEditText(!verifyEditText.GetEnableEditText());
             }
         });
     }
