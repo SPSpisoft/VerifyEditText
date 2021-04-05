@@ -7,11 +7,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
 
-/**
- * 解决AOSP键盘无法监听无内容状态下删除键的问题
- *
- * @author cirno-poi
- */
+
 public class HelperEditText extends android.support.v7.widget.AppCompatEditText {
 
     private OnKeyListener keyListener;
@@ -28,7 +24,6 @@ public class HelperEditText extends android.support.v7.widget.AppCompatEditText 
         super(context, attrs, defStyleAttr);
     }
 
-    //覆盖输入框和键盘的关联接口
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
         return new MyInputConnection(super.onCreateInputConnection(outAttrs),
@@ -42,7 +37,6 @@ public class HelperEditText extends android.support.v7.widget.AppCompatEditText 
             super(target, mutable);
         }
 
-        //覆盖事件传递
         @Override
         public boolean sendKeyEvent(KeyEvent event) {
             if (keyListener != null) {
@@ -53,7 +47,6 @@ public class HelperEditText extends android.support.v7.widget.AppCompatEditText 
 
         @Override
         public boolean deleteSurroundingText(int beforeLength, int afterLength) {
-            //在删除时，输入框无内容，或者删除以后输入框无内容
             if (beforeLength == 1 || afterLength == 0 || beforeLength == 0) {
                 // backspace
                 return sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
@@ -64,7 +57,6 @@ public class HelperEditText extends android.support.v7.widget.AppCompatEditText 
 
     }
 
-    //设置监听回调
     public void setDeleteEventListener(OnKeyListener listener) {
         keyListener = listener;
     }

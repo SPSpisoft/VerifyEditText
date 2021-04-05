@@ -1,5 +1,6 @@
 package com.spisoft.verifyedittextlibrary;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorInt;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -25,6 +27,8 @@ import com.spisoft.verificationedittextlibrary.R;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  *
@@ -50,31 +54,24 @@ public class VerifyEditText extends LinearLayout {
     private @ColorInt
     int lineDefaultColor = ContextCompat.getColor(getContext(), R.color.colorDefault);
     /**
-     * 是否让所有的线都高亮
      */
     private boolean isAllLineLight = false;
     /**
-     * 输入框数量
      */
     private int inputCount = DEFAULT_INPUT_COUNT;
     /**
-     * 下划线高度
      */
     private int lineHeight;
     /**
-     * 输入框间距
      */
     private int inputSpace;
     /**
-     * 和下划线的间距
      */
     private int lineSpace;
     /**
-     * 输入文字大小
      */
     private float textSize = DEFAULT_TEXT_SIZE;
     /**
-     * 光标资源
      */
     private @DrawableRes
     int mCursorDrawable = R.drawable.edit_cursor_shape;
@@ -195,6 +192,7 @@ public class VerifyEditText extends LinearLayout {
             for (int i = 0; i < editTextList.size(); i++) {
                 if (editTextList.get(i).isFocused()) {
                     currentPosition = i;
+//                    ShiftToLast(currentPosition);
                 }
                 if (!isAllLineLight) {
                     underlineList.get(i).setBackgroundColor(lineDefaultColor);
@@ -203,6 +201,20 @@ public class VerifyEditText extends LinearLayout {
             if (!isAllLineLight) {
                 underlineList.get(currentPosition).setBackgroundColor(lineFocusColor);
             }
+        };
+
+        @SuppressLint("ClickableViewAccessibility")
+        OnTouchListener touchListener = (v, motion) -> {
+            for (int i = 0; i < editTextList.size(); i++) {
+                if(editTextList.get(i).getText().toString().isEmpty()){
+                    InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+                    editTextList.get(i).requestFocus();
+                    assert inputMethodManager != null;
+                    inputMethodManager.showSoftInput(editTextList.get(i), 0);
+                    return true;
+                }
+            }
+            return false;
         };
 
         OnKeyListener keyListener = (v, keyCode, event) -> {
@@ -243,16 +255,21 @@ public class VerifyEditText extends LinearLayout {
             et.addTextChangedListener(textWatcher);
             et.setOnFocusChangeListener(onFocusChangeListener);
             et.setOnKeyListener(keyListener);
+            et.setOnTouchListener(touchListener);
         }
 
         editTextList.get(0).requestFocus();
     }
 
-    /**
-     * 获取输入的内容，可能为空
-     *
-     * @return 输入的内容
-     */
+    private void ShiftToLast(int mPosition) {
+        while (mPosition > 0 && editTextList.get(mPosition-1).getText().toString().isEmpty()){
+            editTextList.get(mPosition).clearFocus();
+            --mPosition;
+            editTextList.get(mPosition).requestFocus();
+        }
+//        editTextList.get(mPosition).clearFocus();
+    }
+
     public String getContent() {
         if (editTextList == null) {
             return "";
@@ -274,9 +291,7 @@ public class VerifyEditText extends LinearLayout {
     }
 
     /**
-     * 是否输入完成
      *
-     * @return 输入完成boolean
      */
     public boolean isInputComplete() {
         if (editTextList == null) {
@@ -291,9 +306,7 @@ public class VerifyEditText extends LinearLayout {
     }
 
     /**
-     * 是否设置所有下划线高亮
      *
-     * @param flag 标志位
      */
     public void setAllLineLight(boolean flag) {
         isAllLineLight = flag;
@@ -305,7 +318,6 @@ public class VerifyEditText extends LinearLayout {
     }
 
     /**
-     * 输入完成监听，在afterTextChanged里调
      */
     public interface inputCompleteListener {
         void inputComplete(VerifyEditText et, String content);
