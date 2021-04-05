@@ -1,6 +1,7 @@
 package com.spisoft.verifyedittextlibrary;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -29,7 +30,6 @@ public class HelperEditText extends android.support.v7.widget.AppCompatEditText 
         return new MyInputConnection(super.onCreateInputConnection(outAttrs),
                 true);
     }
-
 
     private class MyInputConnection extends InputConnectionWrapper {
 

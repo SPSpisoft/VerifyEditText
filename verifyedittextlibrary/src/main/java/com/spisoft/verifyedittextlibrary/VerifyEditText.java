@@ -3,6 +3,7 @@ package com.spisoft.verifyedittextlibrary;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -75,6 +76,7 @@ public class VerifyEditText extends LinearLayout {
      */
     private @DrawableRes
     int mCursorDrawable = R.drawable.edit_cursor_shape;
+    private int textColor = Color.GRAY;
 
     public VerifyEditText(Context context) {
         this(context, null);
@@ -139,6 +141,7 @@ public class VerifyEditText extends LinearLayout {
             editText.setPadding(0, 0, 0, lineSpace);
             editText.setMaxLines(1);
             editText.setTextSize(textSize);
+            editText.setTextColor(textColor);
             InputFilter[] filters = {new InputFilter.LengthFilter(1)};
             editText.setFilters(filters);
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -345,6 +348,26 @@ public class VerifyEditText extends LinearLayout {
 
     public void setLineDefaultColor(int lineDefaultColor) {
         this.lineDefaultColor = lineDefaultColor;
+    }
+
+    public VerifyEditText SetTextColor(int color) {
+        this.textColor = color;
+        for (HelperEditText et : editTextList) {
+            if(et != null) {
+                et.setTextColor(this.textColor);
+            }
+        }
+        return this;
+    }
+
+    public VerifyEditText SetText(String text) {
+        for (int i=0; i<editTextList.size() ; i++) {
+            HelperEditText et = editTextList.get(i);
+            if(et != null) {
+                et.setText(text.substring(i), TextView.BufferType.EDITABLE);
+            }
+        }
+        return this;
     }
 
     public int getInputCount() {
